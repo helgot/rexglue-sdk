@@ -448,6 +448,7 @@ bool build_vaddubm(BuilderContext& ctx);
 bool build_vaddubs(BuilderContext& ctx);
 bool build_vadduhm(BuilderContext& ctx);
 bool build_vadduwm(BuilderContext& ctx);
+bool build_vadduhs(BuilderContext& ctx);
 bool build_vadduws(BuilderContext& ctx);
 bool build_vsubsbs(BuilderContext& ctx);
 bool build_vsubshs(BuilderContext& ctx);

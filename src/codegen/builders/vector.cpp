@@ -279,6 +279,12 @@ bool build_vadduwm(BuilderContext& ctx)
     return true;
 }
 
+bool build_vadduhs(BuilderContext& ctx)
+{
+    ctx.emit_vec_int_binary("adds_epu16", "u16");
+    return true;
+}
+
 bool build_vadduws(BuilderContext& ctx)
 {
     ctx.emit_vec_int_binary("adds_epu32", "u32");
