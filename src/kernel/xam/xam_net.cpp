@@ -996,6 +996,59 @@ void NetDll_WSASetLastError_entry(dword_t error_code) {
   XThread::SetLastError(error_code);
 }
 
+dword_result_t NetDll_XNetUnregisterKey_entry(dword_t caller,
+                                              lpdword_t key_id) {
+  REXKRNL_WARN("NetDll_XNetUnregisterKey() - stub");                                                                            
+  return 0;
+}
+
+dword_result_t NetDll_getpeername_entry(dword_t caller, dword_t socket_handle,
+                                        pointer_t<XSOCKADDR_IN> addr_ptr,
+                                        lpdword_t addrlen_ptr) {
+  REXKRNL_WARN("NetDll_getpeername() - stub");                                        
+  return 0;
+}
+
+dword_result_t NetDll_WSAEventSelect_entry(dword_t caller,
+                                           dword_t socket_handle,
+                                           dword_t event_handle,
+                                           dword_t flags) {
+  REXKRNL_WARN("NetDll_WSAEventSelect() - stub");
+  return 0;
+}
+
+dword_result_t NetDll_XNetCreateKey_entry(dword_t caller, lpdword_t key_id,
+                                          lpdword_t exchange_key) {
+  kernel_memory()->Fill(key_id.guest_address(), 8, 0xBE);
+  kernel_memory()->Fill(exchange_key.guest_address(), 16, 0xBE);
+  return 0;
+}
+
+dword_result_t NetDll_XNetRegisterKey_entry(dword_t caller, lpdword_t key_id,
+                                            lpdword_t exchange_key) {
+  REXKRNL_WARN("NetDll_XNetRegisterKey() - stub");
+  return 0;
+}
+
+dword_result_t NetDll_XNetQosLookup_entry(
+    dword_t caller, dword_t num_remote_consoles,
+    pointer_t<uint32_t> remote_addresses_array_ptrs,
+    pointer_t<uint32_t> sessionId_array_ptrs,
+    pointer_t<uint32_t> remote_keys_array_ptrs, dword_t num_gateways,
+    pointer_t<in_addr> gateways_array, pointer_t<uint32_t> service_ids_array,
+    dword_t probes_count, dword_t bits_per_second, dword_t flags,
+    dword_t event_handle, lpdword_t qos_ptr) {
+    REXKRNL_WARN("NetDll_XNetQosLookup() - stub");
+
+    return X_ERROR_SUCCESS;
+}
+
+dword_result_t XNetLogonGetTitleID_entry(dword_t service_id)
+{
+  REXKRNL_WARN("XNetLogonGetTitleID() - stub");
+  return X_ERROR_SUCCESS;
+}
+
 }  // namespace xam
 }  // namespace kernel
 }  // namespace rex
@@ -1044,3 +1097,10 @@ GUEST_FUNCTION_HOOK(__imp__NetDll_send, rex::kernel::xam::NetDll_send_entry)
 GUEST_FUNCTION_HOOK(__imp__NetDll_sendto, rex::kernel::xam::NetDll_sendto_entry)
 GUEST_FUNCTION_HOOK(__imp__NetDll___WSAFDIsSet, rex::kernel::xam::NetDll___WSAFDIsSet_entry)
 GUEST_FUNCTION_HOOK(__imp__NetDll_WSASetLastError, rex::kernel::xam::NetDll_WSASetLastError_entry)
+GUEST_FUNCTION_HOOK(__imp__NetDll_getpeername, rex::kernel::xam::NetDll_getpeername_entry)
+GUEST_FUNCTION_HOOK(__imp__NetDll_WSAEventSelect, rex::kernel::xam::NetDll_WSAEventSelect_entry)
+GUEST_FUNCTION_HOOK(__imp__NetDll_XNetCreateKey, rex::kernel::xam::NetDll_XNetCreateKey_entry)
+GUEST_FUNCTION_HOOK(__imp__NetDll_XNetRegisterKey, rex::kernel::xam::NetDll_XNetRegisterKey_entry)
+GUEST_FUNCTION_HOOK(__imp__NetDll_XNetUnregisterKey, rex::kernel::xam::NetDll_XNetUnregisterKey_entry)
+GUEST_FUNCTION_HOOK(__imp__NetDll_XNetQosLookup, rex::kernel::xam::NetDll_XNetQosLookup_entry)
+GUEST_FUNCTION_HOOK(__imp__XNetLogonGetTitleID, rex::kernel::xam::XNetLogonGetTitleID_entry)

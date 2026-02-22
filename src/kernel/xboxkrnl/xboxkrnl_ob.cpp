@@ -84,6 +84,29 @@ dword_result_t ObLookupThreadByThreadId_entry(dword_t thread_id,
   return X_STATUS_SUCCESS;
 }
 
+
+void ObReferenceObject_entry(dword_t native_ptr) {
+  // Check if a dummy value from ObReferenceObjectByHandle.
+  auto object = XObject::GetNativeObject<XObject>(
+      kernel_state(), kernel_memory()->TranslateVirtual(native_ptr));
+  if (object) {
+    object->RetainHandle();
+  } else {
+    if (native_ptr) {
+      REXKRNL_WARN("Unregistered guest object provided to ObReferenceObject {:08X}",
+             native_ptr.value());
+    }
+  }
+  return;
+}
+
+void ObIsTitleObject_entry()
+{
+  return;
+}
+
+
+
 dword_result_t ObReferenceObjectByHandle_entry(dword_t handle,
                                                dword_t object_type_ptr,
                                                lpdword_t out_object_ptr) {
@@ -135,6 +158,8 @@ dword_result_t ObReferenceObjectByName_entry(lpstring_t name,
 
   return result;
 }
+
+
 
 dword_result_t ObDereferenceObject_entry(dword_t native_ptr) {
   REXKRNL_IMPORT_TRACE("ObDereferenceObject", "ptr={:#x}", (uint32_t)native_ptr);
@@ -215,10 +240,12 @@ dword_result_t NtClose_entry(dword_t handle) {
 GUEST_FUNCTION_HOOK(__imp__ObOpenObjectByName, rex::kernel::xboxkrnl::ObOpenObjectByName_entry)
 GUEST_FUNCTION_HOOK(__imp__ObOpenObjectByPointer, rex::kernel::xboxkrnl::ObOpenObjectByPointer_entry)
 GUEST_FUNCTION_HOOK(__imp__ObLookupThreadByThreadId, rex::kernel::xboxkrnl::ObLookupThreadByThreadId_entry)
+GUEST_FUNCTION_HOOK(__imp__ObReferenceObject, rex::kernel::xboxkrnl::ObReferenceObject_entry)
 GUEST_FUNCTION_HOOK(__imp__ObReferenceObjectByHandle, rex::kernel::xboxkrnl::ObReferenceObjectByHandle_entry)
 GUEST_FUNCTION_HOOK(__imp__ObReferenceObjectByName, rex::kernel::xboxkrnl::ObReferenceObjectByName_entry)
 GUEST_FUNCTION_HOOK(__imp__ObDereferenceObject, rex::kernel::xboxkrnl::ObDereferenceObject_entry)
 GUEST_FUNCTION_HOOK(__imp__ObCreateSymbolicLink, rex::kernel::xboxkrnl::ObCreateSymbolicLink_entry)
 GUEST_FUNCTION_HOOK(__imp__ObDeleteSymbolicLink, rex::kernel::xboxkrnl::ObDeleteSymbolicLink_entry)
+GUEST_FUNCTION_HOOK(__imp__ObIsTitleObject, rex::kernel::xboxkrnl::ObIsTitleObject_entry)
 GUEST_FUNCTION_HOOK(__imp__NtDuplicateObject, rex::kernel::xboxkrnl::NtDuplicateObject_entry)
 GUEST_FUNCTION_HOOK(__imp__NtClose, rex::kernel::xboxkrnl::NtClose_entry)

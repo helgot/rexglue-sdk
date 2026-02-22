@@ -750,6 +750,33 @@ dword_result_t XamSessionRefObjByHandle_entry(dword_t handle,
   return X_ERROR_SUCCESS;
 }
 
+dword_result_t XamUserCreateStatsEnumerator_entry(
+    dword_t title_id, dword_t user_index, dword_t count, dword_t flags,
+    dword_t size, lpdword_t stats_ptr,
+    lpdword_t buffer_size_ptr, lpdword_t handle_ptr) {
+  REXKRNL_WARN("XamUserCreateStatsEnumerator() - stub");
+  return X_ERROR_SUCCESS;
+}
+
+dword_result_t XamShowGamerCardUIForXUID_entry(dword_t user_index,
+                                               qword_t xuid_player) {
+
+  REXKRNL_WARN("XamShowGamerCardUIForXUID() - stub");                                            
+  return X_ERROR_INVALID_PARAMETER;
+}
+
+dword_result_t XamUserGetMembershipTierFromXUID_entry(dword_t user_index,
+                                               qword_t xuid_player) {
+
+  REXKRNL_WARN("XamUserGetMembershipTierFromXUID() - stub");                                            
+  return X_ERROR_INVALID_PARAMETER;
+}
+
+dword_result_t XamUserGetOnlineCountryFromXUID_entry(qword_t xuid) {
+  REXKRNL_WARN("XamUserGetOnlineCountryFromXUID() - stub");                                            
+  return X_ERROR_INVALID_PARAMETER;
+}
+
 }  // namespace xam
 }  // namespace kernel
 }  // namespace rex
@@ -776,3 +803,8 @@ GUEST_FUNCTION_HOOK(__imp__XamReadTileToTexture, rex::kernel::xam::XamReadTileTo
 GUEST_FUNCTION_HOOK(__imp__XamWriteGamerTile, rex::kernel::xam::XamWriteGamerTile_entry)
 GUEST_FUNCTION_HOOK(__imp__XamSessionCreateHandle, rex::kernel::xam::XamSessionCreateHandle_entry)
 GUEST_FUNCTION_HOOK(__imp__XamSessionRefObjByHandle, rex::kernel::xam::XamSessionRefObjByHandle_entry)
+GUEST_FUNCTION_HOOK(__imp__XamUserCreateStatsEnumerator, rex::kernel::xam::XamUserCreateStatsEnumerator_entry)
+GUEST_FUNCTION_HOOK(__imp__XamShowGamerCardUIForXUID, rex::kernel::xam::XamShowGamerCardUIForXUID_entry)
+GUEST_FUNCTION_HOOK(__imp__XamUserGetMembershipTierFromXUID, rex::kernel::xam::XamUserGetMembershipTierFromXUID_entry)
+GUEST_FUNCTION_HOOK(__imp__XamUserGetOnlineCountryFromXUID, rex::kernel::xam::XamUserGetOnlineCountryFromXUID_entry)
+

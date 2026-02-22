@@ -939,7 +939,17 @@ bool BaseHeap::AllocFixed(uint32_t base_address, uint32_t size,
 
   alignment = rex::round_up(alignment, page_size_);
   size = rex::align(size, alignment);
+  if(base_address % alignment == 0)
+  {
+    REXKRNL_DEBUG("AllocFixed(): base_address: {:08X}, size: {:08X}, page_size_: {:08X}, alignment: {:08X}", base_address, size, page_size_, alignment);
+  }
+  else
+  {
+    REXKRNL_ERROR("AllocFixed(): base_address: {:08X}, size: {:08X}, page_size_: {:08X}, alignment: {:08X}", base_address, size, page_size_, alignment);
+  } 
+
   assert_true(base_address % alignment == 0);
+  
   uint32_t page_count = get_page_count(size, page_size_);
   uint32_t start_page_number = (base_address - heap_base_) / page_size_;
   uint32_t end_page_number = start_page_number + page_count - 1;
@@ -1016,6 +1026,11 @@ bool BaseHeap::AllocRange(uint32_t low_address, uint32_t high_address,
                           uint32_t size, uint32_t alignment,
                           uint32_t allocation_type, uint32_t protect,
                           bool top_down, uint32_t* out_address) {
+
+  if (alignment == 0x2000)
+  {
+    REXKRNL_WARN("BaseHeap::Alloc Alignment set to 0x2000.");
+  }
   *out_address = 0;
 
   alignment = rex::round_up(alignment, page_size_);
@@ -1589,6 +1604,11 @@ bool PhysicalHeap::AllocRange(uint32_t low_address, uint32_t high_address,
 
   // Given the address we've reserved in the parent heap, pin that here.
   // Shouldn't be possible for it to be allocated already.
+  // Note(harrison): Dead Rising allocates at at heap_base 0xE000000 with
+  // alignment set to 0x2000. 
+  // The parent_address is currently such that (parent_address % alignment == 0), 
+  // but the -0x1000 from the physical address of the heap_base_ breaks the alignment
+  // requirement in BaseHeap::AllocFixed. 
   uint32_t address =
       heap_base_ + parent_address - GetPhysicalAddress(heap_base_);
   if (!BaseHeap::AllocFixed(address, size, alignment, allocation_type,

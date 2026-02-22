@@ -556,6 +556,10 @@ dword_result_t XamShowCommunitySessionsUI_entry(unknown_t r3, unknown_t r4) {
   return X_ERROR_FUNCTION_FAILED;
 }
 
+dword_result_t XamShowFriendsUI_entry(dword_t user_index) {
+  return X_ERROR_FUNCTION_FAILED;
+}
+
 uint32_t XamShowMessageBoxUIEx_entry() {
   // TODO(tomc): implement properly
   static bool warned = false;
@@ -564,6 +568,40 @@ uint32_t XamShowMessageBoxUIEx_entry() {
     warned = true;
   }
   return 0;
+}
+
+dword_result_t XamShowAchievementsUI_entry(dword_t user_index,
+                                           dword_t title_id) {
+  return X_ERROR_NO_SUCH_USER;
+}
+
+dword_result_t XamShowPlayerReviewUI_entry(dword_t user_index,
+                                           uint64_t title_id) {
+  return X_ERROR_NO_SUCH_USER;
+}
+
+dword_result_t XamShowFriendRequestUI_entry(dword_t user_index,
+                                            qword_t xuid) {
+  return X_ERROR_NO_SUCH_USER;
+}
+
+dword_result_t XamShowPlayersUI_entry(dword_t user_index) {
+  return X_ERROR_NO_SUCH_USER;
+}
+
+dword_result_t XamShowMessagesUI_entry(dword_t user_index) {
+  return X_ERROR_NO_SUCH_USER;
+}
+
+dword_result_t XamShowMarketplaceUI_entry(dword_t user_index, dword_t ui_type,
+                                          qword_t offer_id, dword_t offer_type,
+                                          dword_t content_category,
+                                          dword_t title_id) {
+  return X_ERROR_NO_SUCH_USER;
+}
+
+dword_result_t XamShowMessageComposeUI_entry() {
+  return X_ERROR_BAD_ARGUMENTS;
 }
 
 }  // namespace xam
@@ -578,3 +616,14 @@ GUEST_FUNCTION_HOOK(__imp__XamShowDirtyDiscErrorUI, rex::kernel::xam::XamShowDir
 GUEST_FUNCTION_HOOK(__imp__XamShowPartyUI, rex::kernel::xam::XamShowPartyUI_entry)
 GUEST_FUNCTION_HOOK(__imp__XamShowCommunitySessionsUI, rex::kernel::xam::XamShowCommunitySessionsUI_entry)
 GUEST_FUNCTION_HOOK(__imp__XamShowMessageBoxUIEx, rex::kernel::xam::XamShowMessageBoxUIEx_entry)
+GUEST_FUNCTION_HOOK(__imp__XamShowFriendsUI, rex::kernel::xam::XamShowFriendsUI_entry)
+GUEST_FUNCTION_HOOK(__imp__XamShowAchievementsUI, rex::kernel::xam::XamShowAchievementsUI_entry)
+GUEST_FUNCTION_HOOK(__imp__XamShowPlayerReviewUI, rex::kernel::xam::XamShowPlayerReviewUI_entry)
+GUEST_FUNCTION_HOOK(__imp__XamShowFriendRequestUI, rex::kernel::xam::XamShowFriendRequestUI_entry)
+GUEST_FUNCTION_HOOK(__imp__XamShowPlayersUI, rex::kernel::xam::XamShowPlayersUI_entry)
+GUEST_FUNCTION_HOOK(__imp__XamShowMessagesUI, rex::kernel::xam::XamShowMessagesUI_entry)
+GUEST_FUNCTION_HOOK(__imp__XamShowMarketplaceUI, rex::kernel::xam::XamShowMarketplaceUI_entry)
+GUEST_FUNCTION_HOOK(__imp__XamShowMessageComposeUI, rex::kernel::xam::XamShowMessageComposeUI_entry)
+
+
+

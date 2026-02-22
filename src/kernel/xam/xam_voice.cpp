@@ -41,6 +41,12 @@ dword_result_t XamVoiceClose_entry(lpunknown_t voice_ptr) { return 0; }
 
 dword_result_t XamVoiceHeadsetPresent_entry(lpunknown_t voice_ptr) { return 0; }
 
+dword_result_t XamVoiceSubmitPacket_entry(lpdword_t unk1, dword_t unk2,
+                                          lpdword_t unk3) {
+  // also may return 0xD000009D
+  return 0x800700AA;
+}
+
 }  // namespace xam
 }  // namespace kernel
 }  // namespace rex
@@ -49,3 +55,5 @@ GUEST_FUNCTION_HOOK(__imp__XamVoiceIsActiveProcess, rex::kernel::xam::XamVoiceIs
 GUEST_FUNCTION_HOOK(__imp__XamVoiceCreate, rex::kernel::xam::XamVoiceCreate_entry)
 GUEST_FUNCTION_HOOK(__imp__XamVoiceClose, rex::kernel::xam::XamVoiceClose_entry)
 GUEST_FUNCTION_HOOK(__imp__XamVoiceHeadsetPresent, rex::kernel::xam::XamVoiceHeadsetPresent_entry)
+GUEST_FUNCTION_HOOK(__imp__XamVoiceSubmitPacket, rex::kernel::xam::XamVoiceSubmitPacket_entry)
+

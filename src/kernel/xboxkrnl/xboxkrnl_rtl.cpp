@@ -614,6 +614,11 @@ void RtlUnwind_entry() {
   REXKRNL_WARN("[STUB] RtlUnwind called - not implemented");
 }
 
+dword_result_t RtlUpcaseUnicodeChar_entry(dword_t SourceCharacter) {
+  return std::use_facet<std::ctype<char16_t>>(std::locale())
+      .toupper(SourceCharacter);
+}
+
 void __C_specific_handler_entry() {
   // TODO(tomc): do we even need this?
   REXKRNL_WARN("[STUB] __C_specific_handler called - not implemented");
@@ -635,6 +640,7 @@ GUEST_FUNCTION_HOOK(__imp__RtlFreeUnicodeString, rex::kernel::xboxkrnl::RtlFreeU
 GUEST_FUNCTION_HOOK(__imp__RtlCopyString, rex::kernel::xboxkrnl::RtlCopyString_entry)
 GUEST_FUNCTION_HOOK(__imp__RtlCopyUnicodeString, rex::kernel::xboxkrnl::RtlCopyUnicodeString_entry)
 GUEST_FUNCTION_HOOK(__imp__RtlUnicodeStringToAnsiString, rex::kernel::xboxkrnl::RtlUnicodeStringToAnsiString_entry)
+GUEST_FUNCTION_HOOK(__imp__RtlUpcaseUnicodeChar, rex::kernel::xboxkrnl::RtlUpcaseUnicodeChar_entry)
 GUEST_FUNCTION_HOOK(__imp__RtlMultiByteToUnicodeN, rex::kernel::xboxkrnl::RtlMultiByteToUnicodeN_entry)
 GUEST_FUNCTION_HOOK(__imp__RtlUnicodeToMultiByteN, rex::kernel::xboxkrnl::RtlUnicodeToMultiByteN_entry)
 GUEST_FUNCTION_HOOK(__imp__RtlImageNtHeader, rex::kernel::xboxkrnl::RtlImageNtHeader_entry)

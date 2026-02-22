@@ -455,6 +455,18 @@ dword_result_t NtWriteFile_entry(dword_t file_handle, dword_t event_handle,
   return result;
 }
 
+dword_result_t NtWriteFileGather_entry(dword_t file_handle, dword_t event_handle,
+                                       function_t apc_routine, lpvoid_t apc_context,
+                                       pointer_t<X_IO_STATUS_BLOCK> io_status_block,
+                                       lpvoid_t buffer, dword_t buffer_length,
+                                       lpqword_t byte_offset_ptr) {
+ return NtWriteFile_entry(file_handle, event_handle, apc_routine, apc_context,
+                          io_status_block, buffer, buffer_length, byte_offset_ptr);
+}
+
+
+
+
 dword_result_t NtCreateIoCompletion_entry(lpdword_t out_handle,
                                           dword_t desired_access,
                                           lpvoid_t object_attribs,
@@ -750,6 +762,15 @@ dword_result_t IoCreateDevice_entry(dword_t device_struct, dword_t r4,
   return X_STATUS_SUCCESS;
 }
 
+dword_result_t NtCancelIoFile_entry(dword_t handle) {
+  auto file = kernel_state()->object_table()->LookupObject<XFile>(handle);
+  if (!file) {
+    return X_STATUS_INVALID_HANDLE;
+  }
+
+  return X_STATUS_SUCCESS;
+}
+
 dword_result_t IoDismountVolumeByFileHandle_entry(dword_t handle) {
   REXKRNL_WARN("IoDismountVolumeByFileHandle({:#x}) - stub", (uint32_t)handle);
   return X_STATUS_SUCCESS;
@@ -782,6 +803,45 @@ dword_result_t StfsControlDevice_entry(lpvoid_t device_object, dword_t ioctl,
   return X_STATUS_SUCCESS;
 }
 
+dword_result_t IoDismountVolume_entry(lpvoid_t device_object) {
+  REXKRNL_WARN("IoDismountVolume({:#x}) - stub", (uint32_t)device_object);
+  return X_STATUS_SUCCESS;
+}
+
+dword_result_t IoInvalidDeviceRequest_entry(lpdword_t device_object, lpdword_t irp) {
+  REXKRNL_WARN("IoInvalidDeviceRequest({:#x}) - stub", (uint32_t)device_object);
+  return X_STATUS_SUCCESS;
+}
+
+dword_result_t IoDeleteDevice_entry(dword_t device_ptr, void* ctx) {
+  REXKRNL_WARN("[STUB] IoDeleteDevice called - not implemented");
+  return X_STATUS_SUCCESS;
+}
+
+dword_result_t IoCompleteRequest_entry(lpdword_t irp, const uint32_t quantum_increment) {
+      REXKRNL_WARN("[STUB] IoCompleteRequest called - not implemented");
+  return X_STATUS_SUCCESS;
+}
+
+dword_result_t IoCheckShareAccess_entry()
+{
+    REXKRNL_WARN("[STUB] IoCheckShareAccess called - not implemented");
+    return X_STATUS_SUCCESS;
+
+}
+
+dword_result_t IoSetShareAccess_entry()
+{
+    REXKRNL_WARN("[STUB] IoSetShareAccess called - not implemented");
+    return X_STATUS_SUCCESS;
+}
+
+dword_result_t IoRemoveShareAccess_entry()
+{
+    REXKRNL_WARN("[STUB] IoRemoveShareAccess called - not implemented");
+    return X_STATUS_SUCCESS;
+}
+
 }  // namespace rex::kernel::xboxkrnl
 
 GUEST_FUNCTION_HOOK(__imp__NtCreateFile, rex::kernel::xboxkrnl::NtCreateFile_entry)
@@ -789,6 +849,8 @@ GUEST_FUNCTION_HOOK(__imp__NtOpenFile, rex::kernel::xboxkrnl::NtOpenFile_entry)
 GUEST_FUNCTION_HOOK(__imp__NtReadFile, rex::kernel::xboxkrnl::NtReadFile_entry)
 GUEST_FUNCTION_HOOK(__imp__NtReadFileScatter, rex::kernel::xboxkrnl::NtReadFileScatter_entry)
 GUEST_FUNCTION_HOOK(__imp__NtWriteFile, rex::kernel::xboxkrnl::NtWriteFile_entry)
+GUEST_FUNCTION_HOOK(__imp__NtWriteFileGather, rex::kernel::xboxkrnl::NtWriteFileGather_entry)
+GUEST_FUNCTION_HOOK(__imp__NtCancelIoFile, rex::kernel::xboxkrnl::NtCancelIoFile_entry)
 GUEST_FUNCTION_HOOK(__imp__NtCreateIoCompletion, rex::kernel::xboxkrnl::NtCreateIoCompletion_entry)
 GUEST_FUNCTION_HOOK(__imp__NtSetIoCompletion, rex::kernel::xboxkrnl::NtSetIoCompletion_entry)
 GUEST_FUNCTION_HOOK(__imp__NtRemoveIoCompletion, rex::kernel::xboxkrnl::NtRemoveIoCompletion_entry)
@@ -800,9 +862,16 @@ GUEST_FUNCTION_HOOK(__imp__NtQuerySymbolicLinkObject, rex::kernel::xboxkrnl::NtQ
 GUEST_FUNCTION_HOOK(__imp__FscGetCacheElementCount, rex::kernel::xboxkrnl::FscGetCacheElementCount_entry)
 GUEST_FUNCTION_HOOK(__imp__FscSetCacheElementCount, rex::kernel::xboxkrnl::FscSetCacheElementCount_entry)
 GUEST_FUNCTION_HOOK(__imp__NtDeviceIoControlFile, rex::kernel::xboxkrnl::NtDeviceIoControlFile_entry)
+GUEST_FUNCTION_HOOK(__imp__IoDeleteDevice, rex::kernel::xboxkrnl::IoDeleteDevice_entry)
 GUEST_FUNCTION_HOOK(__imp__IoCreateDevice, rex::kernel::xboxkrnl::IoCreateDevice_entry)
 GUEST_FUNCTION_HOOK(__imp__IoDismountVolumeByFileHandle, rex::kernel::xboxkrnl::IoDismountVolumeByFileHandle_entry)
 GUEST_FUNCTION_HOOK(__imp__IoDismountVolumeByName, rex::kernel::xboxkrnl::IoDismountVolumeByName_entry)
+GUEST_FUNCTION_HOOK(__imp__IoDismountVolume, rex::kernel::xboxkrnl::IoDismountVolume_entry)
 GUEST_FUNCTION_HOOK(__imp__IoSynchronousDeviceIoControlRequest, rex::kernel::xboxkrnl::IoSynchronousDeviceIoControlRequest_entry)
+GUEST_FUNCTION_HOOK(__imp__IoInvalidDeviceRequest, rex::kernel::xboxkrnl::IoInvalidDeviceRequest_entry)
+GUEST_FUNCTION_HOOK(__imp__IoCompleteRequest, rex::kernel::xboxkrnl::IoCompleteRequest_entry)
+GUEST_FUNCTION_HOOK(__imp__IoCheckShareAccess, rex::kernel::xboxkrnl::IoCheckShareAccess_entry)
+GUEST_FUNCTION_HOOK(__imp__IoSetShareAccess, rex::kernel::xboxkrnl::IoSetShareAccess_entry)
+GUEST_FUNCTION_HOOK(__imp__IoRemoveShareAccess, rex::kernel::xboxkrnl::IoRemoveShareAccess_entry)
 GUEST_FUNCTION_HOOK(__imp__StfsCreateDevice, rex::kernel::xboxkrnl::StfsCreateDevice_entry)
 GUEST_FUNCTION_HOOK(__imp__StfsControlDevice, rex::kernel::xboxkrnl::StfsControlDevice_entry)
